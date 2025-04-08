@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  airflow:
+    image: apache/airflow:2.7.3
+    container_name: weather_airflow
+    restart: always
+    environment:
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://weather_user:weather_pass@host.docker.internal:5432/weather_pipeline
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'false'
+      PYTHONPATH: /opt/airflow
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+      - ./logs:/opt/airflow/logs
+      - ./plugins:/opt/airflow/plugins
+    ports:
+      - "8082:8080"
+    entrypoint: >
+      bash -c "
+        airflow db migrate &&
+        airflow users create --username airflow --password airflow --firstname Namrata --lastname Patil --role Admin --email namrata@example.com &&
+        airflow scheduler & airflow webserver
+      "

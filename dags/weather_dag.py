@@ -18,12 +18,12 @@ with DAG(
     default_args=default_args,
     description='ETL pipeline for weather data',
     start_date=datetime(2025, 4, 7),
-    schedule_interval='@daily',
-    catchup=False
+    schedule_interval='0 */3 * * *',
+    catchup=True
 ) as dag:
 
     def extract():
-        cities = ["Los Angeles", "San Francisco", "Bangalore"]
+        cities = ["Los Angeles", "San Francisco", "Bangalore", "New York", "Tokyo", "London","Abu Dhabi"]
         return get_multiple_cities_weather(cities)
 
     def transform(ti):

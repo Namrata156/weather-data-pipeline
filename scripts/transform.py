@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 def transform_weather_data(raw_data):
-    print(raw_data[0])
+    # print(raw_data[0])
     transformed = []
 
     for entry in raw_data:
@@ -17,4 +17,6 @@ def transform_weather_data(raw_data):
             "datetime": datetime.utcfromtimestamp(entry["dt"]).strftime('%Y-%m-%d %H:%M:%S')
         })
 
-    return pd.DataFrame(transformed)
+    df = pd.DataFrame(transformed)
+    # df = df.drop_duplicates(subset=['city', 'datetime'])  
+    return df
